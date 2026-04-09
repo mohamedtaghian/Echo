@@ -1,1 +1,33 @@
 @import "tailwindcss";
+
+body {
+  font-family: "Outfit Variable", sans-serif;
+}
+
+@theme {
+  --container-sm: 36rem;
+  --container-md: 48rem;
+  --container-lg: 62rem;
+  --container-xl: 75rem;
+  --container-2xl: 78.5rem;
+}
+
+@utility container {
+  margin-inline: auto;
+  padding-inline: 16px;
+  @variant sm {
+    max-width: var(--container-sm);
+  }
+  @variant md {
+    max-width: var(--container-md);
+  }
+  @variant lg {
+    max-width: var(--container-lg);
+  }
+  @variant xl {
+    max-width: var(--container-xl);
+  }
+  @variant 2xl {
+    max-width: var(--container-2xl);
+  }
+}
