@@ -1,6 +1,8 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Authentication from "./pages/Authentication/Authentication";
 import Layout from "./pages/Layout/Layout";
+import AuthProvider from "./providers/AuthProvider/AuthProvider";
+import { Toaster } from "react-hot-toast";
 
 function App() {
   const routes = createBrowserRouter([
@@ -13,7 +15,10 @@ function App() {
 
   return (
     <>
-      <RouterProvider router={routes} />
+      <AuthProvider>
+        <RouterProvider router={routes} />
+        <Toaster />
+      </AuthProvider>
     </>
   );
 }
