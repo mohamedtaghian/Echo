@@ -1,14 +1,28 @@
+import { useState } from "react";
+
 function Authentication() {
-  const state = "login";
+  // STATES
+  const [auth, setAuth] = useState("register");
+
+  // HANDELRS
+  const toggleAuthState = function () {
+    setAuth((curr) => (curr === "register" ? "login" : "register"));
+  };
 
   return (
     <section className="flex justify-center items-center bg-black/90 min-h-screen">
       <form className="bg-white/10 shadow-2xl backdrop-blur-lg px-8 border border-white/20 rounded-2xl w-full sm:w-87.5 text-center">
-        <h1 className="mt-10 font-medium text-white text-3xl">Login</h1>
+        <h1 className="mt-10 font-medium text-white text-3xl">
+          {auth === "register" ? "Sign Up" : "Login"}
+        </h1>
 
-        <p className="mt-2 text-gray-400 text-sm">Please sign in to continue</p>
+        <p className="mt-2 text-gray-400 text-sm">
+          {auth === "register"
+            ? "Please sign up to continue"
+            : "Please sign in to continue"}
+        </p>
 
-        {state !== "login" && (
+        {auth !== "login" && (
           <div className="flex items-center gap-2 bg-white/5 mt-6 pl-6 rounded-full ring-2 ring-white/10 focus-within:ring-indigo-500/60 w-full h-12 overflow-hidden transition-all">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -22,7 +36,6 @@ function Authentication() {
               strokeLinecap="round"
               strokeLinejoin="round"
             >
-              {" "}
               <circle cx="12" cy="8" r="5" />
               <path d="M20 21a8 8 0 0 0-16 0" />
             </svg>
@@ -54,9 +67,8 @@ function Authentication() {
           <input
             type="email"
             name="email"
-            placeholder="Email id"
+            placeholder="Email"
             className="bg-transparent border-none outline-none w-full text-white placeholder-white/60"
-            required
           />
         </div>
 
@@ -81,30 +93,30 @@ function Authentication() {
             name="password"
             placeholder="Password"
             className="bg-transparent border-none outline-none w-full text-white placeholder-white/60"
-            required
           />
-        </div>
-
-        <div className="mt-4 text-left">
-          <button className="text-indigo-400 text-sm hover:underline">
-            Forget password?
-          </button>
         </div>
 
         <button
           type="submit"
-          className="bg-indigo-600 hover:bg-indigo-500 mt-2 rounded-full w-full h-11 text-white transition"
+          className="bg-indigo-600 hover:bg-indigo-500 mt-4 rounded-full w-full h-11 text-white transition-colors duration-300 cursor-pointer"
         >
-          {state === "login" ? "Login" : "Sign up"}
+          {auth === "login" ? "Login" : "Sign up"}
         </button>
 
-        <p className="mt-3 mb-11 text-gray-400 text-sm cursor-pointer">
-          {state === "login"
+        <p
+          onClick={toggleAuthState}
+          className="mt-3 mb-11 text-gray-400 text-sm cursor-pointer"
+        >
+          {auth === "login"
             ? "Don't have an account?"
             : "Already have an account?"}
-          <span className="ml-1 text-indigo-400 hover:underline">
-            click here
-          </span>
+          {auth === "login" ? (
+            <span className="ml-1 text-indigo-400 hover:underline">
+              Sign up
+            </span>
+          ) : (
+            <span className="ml-1 text-indigo-400 hover:underline">Login</span>
+          )}
         </p>
       </form>
       <div className="-z-1 fixed inset-0 pointer-events-none">

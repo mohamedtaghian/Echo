@@ -1,5 +1,5 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import Authentication from "./pages/Authentication";
+import Authentication from "./pages/Authentication/Authentication";
 import Layout from "./pages/Layout/Layout";
 
 function App() {
