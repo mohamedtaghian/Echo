@@ -1,17 +1,54 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { AuthContext } from "../../providers/AuthProvider/AuthProvider";
+
+const loginSchema = z.object({
+  email: z
+    .string()
+    .min(1, "Email is required")
+    .email("Please enter a valid email"),
+  password: z.string().min(6, "Password must be at least 6 characters"),
+});
+
+const signupSchema = loginSchema.extend({
+  name: z.string().min(3, "Name must be at least 3 characters"),
+});
 
 function Authentication() {
+  const { handleLogin, handleRegister, isLoading } = useContext(AuthContext);
+
   // STATES
   const [auth, setAuth] = useState("register");
+
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(auth === "register" ? signupSchema : loginSchema),
+    mode: "onBlur",
+  });
 
   // HANDELRS
   const toggleAuthState = function () {
     setAuth((curr) => (curr === "register" ? "login" : "register"));
+    reset();
+  };
+
+  const onSubmit = async (data) => {
+    if (auth === "register") handleRegister(data);
+    if (auth === "login") handleLogin(data);
   };
 
   return (
     <section className="flex justify-center items-center bg-black/90 min-h-screen">
-      <form className="bg-white/10 shadow-2xl backdrop-blur-lg px-8 border border-white/20 rounded-2xl w-full sm:w-87.5 text-center">
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="bg-white/10 shadow-2xl backdrop-blur-lg px-8 border border-white/20 rounded-2xl w-full sm:w-87.5 text-center"
+      >
         <h1 className="mt-10 font-medium text-white text-3xl">
           {auth === "register" ? "Sign Up" : "Login"}
         </h1>
@@ -22,30 +59,36 @@ function Authentication() {
             : "Please sign in to continue"}
         </p>
 
-        {auth !== "login" && (
-          <div className="flex items-center gap-2 bg-white/5 mt-6 pl-6 rounded-full ring-2 ring-white/10 focus-within:ring-indigo-500/60 w-full h-12 overflow-hidden transition-all">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              className="text-white/60"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <circle cx="12" cy="8" r="5" />
-              <path d="M20 21a8 8 0 0 0-16 0" />
-            </svg>
-            <input
-              type="text"
-              name="name"
-              placeholder="Name"
-              className="bg-transparent border-none outline-none w-full text-white placeholder-white/60"
-            />
-          </div>
+        {auth === "register" && (
+          <>
+            <div className="flex items-center gap-2 bg-white/5 mt-6 pl-6 rounded-full ring-2 ring-white/10 focus-within:ring-indigo-500/60 w-full h-12 overflow-hidden transition-all">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                className="text-white/60"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <circle cx="12" cy="8" r="5" />
+                <path d="M20 21a8 8 0 0 0-16 0" />
+              </svg>
+              <input
+                {...register("name")}
+                placeholder="Name"
+                className="bg-transparent border-none outline-none w-full text-white placeholder-white/60"
+              />
+            </div>
+            {errors.name && (
+              <p className="mt-2.5 text-red-400 text-sm text-left">
+                {errors.name.message}
+              </p>
+            )}
+          </>
         )}
 
         <div className="flex items-center gap-2 bg-white/5 mt-4 pl-6 rounded-full ring-2 ring-white/10 focus-within:ring-indigo-500/60 w-full h-12 overflow-hidden transition-all">
@@ -65,12 +108,16 @@ function Authentication() {
             <rect x="2" y="4" width="20" height="16" rx="2" />
           </svg>
           <input
-            type="email"
-            name="email"
+            {...register("email")}
             placeholder="Email"
             className="bg-transparent border-none outline-none w-full text-white placeholder-white/60"
           />
         </div>
+        {errors.email && (
+          <p className="mt-2.5 text-red-400 text-sm text-left">
+            {errors.email.message}
+          </p>
+        )}
 
         <div className="flex items-center gap-2 bg-white/5 mt-4 pl-6 rounded-full ring-2 ring-white/10 focus-within:ring-indigo-500/60 w-full h-12 overflow-hidden transition-all">
           <svg
@@ -89,18 +136,23 @@ function Authentication() {
             <path d="M7 11V7a5 5 0 0 1 10 0v4" />
           </svg>
           <input
-            type="password"
-            name="password"
+            {...register("password")}
             placeholder="Password"
             className="bg-transparent border-none outline-none w-full text-white placeholder-white/60"
           />
         </div>
+        {errors.password && (
+          <p className="mt-2.5 text-red-400 text-sm text-left">
+            {errors.password.message}
+          </p>
+        )}
 
         <button
           type="submit"
+          disabled={isLoading}
           className="bg-indigo-600 hover:bg-indigo-500 mt-4 rounded-full w-full h-11 text-white transition-colors duration-300 cursor-pointer"
         >
-          {auth === "login" ? "Login" : "Sign up"}
+          {isLoading ? "Processing..." : auth === "login" ? "Login" : "Sign up"}
         </button>
 
         <p
@@ -110,13 +162,9 @@ function Authentication() {
           {auth === "login"
             ? "Don't have an account?"
             : "Already have an account?"}
-          {auth === "login" ? (
-            <span className="ml-1 text-indigo-400 hover:underline">
-              Sign up
-            </span>
-          ) : (
-            <span className="ml-1 text-indigo-400 hover:underline">Login</span>
-          )}
+          <span className="ml-1 text-indigo-400 hover:underline">
+            {auth === "login" ? "Sign up" : "Login"}
+          </span>
         </p>
       </form>
       <div className="-z-1 fixed inset-0 pointer-events-none">
