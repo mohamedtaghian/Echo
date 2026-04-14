@@ -4,6 +4,7 @@ import Layout from "./pages/Layout/Layout";
 import AuthProvider from "./providers/AuthProvider/AuthProvider";
 import { Toaster } from "react-hot-toast";
 import Home from "./pages/Home/Home";
+import AddPost from "./pages/AddPost/AddPost";
 
 function App() {
   const routes = createBrowserRouter([
@@ -13,6 +14,7 @@ function App() {
       children: [
         { path: "/auth", element: <Authentication /> },
         { path: "/", element: <Home /> },
+        { path: "/add-post", element: <AddPost /> },
       ],
     },
   ]);
