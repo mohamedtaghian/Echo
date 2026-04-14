@@ -49,9 +49,9 @@ function Authentication() {
         onSubmit={handleSubmit(onSubmit)}
         className="bg-white/10 shadow-2xl backdrop-blur-lg px-8 border border-white/20 rounded-2xl w-full sm:w-87.5 text-center"
       >
-        <h1 className="mt-10 font-medium text-white text-3xl">
+        <h2 className="mt-10 font-medium text-white text-3xl">
           {auth === "register" ? "Sign Up" : "Login"}
-        </h1>
+        </h2>
 
         <p className="mt-2 text-gray-400 text-sm">
           {auth === "register"
@@ -61,7 +61,7 @@ function Authentication() {
 
         {auth === "register" && (
           <>
-            <div className="flex items-center gap-2 bg-white/5 mt-6 pl-6 rounded-full ring-2 ring-white/10 focus-within:ring-indigo-500/60 w-full h-12 overflow-hidden transition-all">
+            <div className="flex items-center gap-2 bg-white/5 mt-6 p-6 rounded-full ring-2 ring-white/10 focus-within:ring-indigo-500/60 w-full h-12 overflow-hidden transition-all">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="16"
@@ -91,7 +91,7 @@ function Authentication() {
           </>
         )}
 
-        <div className="flex items-center gap-2 bg-white/5 mt-4 pl-6 rounded-full ring-2 ring-white/10 focus-within:ring-indigo-500/60 w-full h-12 overflow-hidden transition-all">
+        <div className="flex items-center gap-2 bg-white/5 mt-4 p-6 rounded-full ring-2 ring-white/10 focus-within:ring-indigo-500/60 w-full h-12 overflow-hidden transition-all">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="14"
@@ -119,7 +119,7 @@ function Authentication() {
           </p>
         )}
 
-        <div className="flex items-center gap-2 bg-white/5 mt-4 pl-6 rounded-full ring-2 ring-white/10 focus-within:ring-indigo-500/60 w-full h-12 overflow-hidden transition-all">
+        <div className="flex items-center gap-2 bg-white/5 mt-4 p-6 rounded-full ring-2 ring-white/10 focus-within:ring-indigo-500/60 w-full h-12 overflow-hidden transition-all">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="14"
