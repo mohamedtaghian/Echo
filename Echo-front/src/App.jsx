@@ -7,6 +7,7 @@ import Home from "./pages/Home/Home";
 import AddPost from "./pages/AddPost/AddPost";
 import EditPost from "./pages/EditPost/EditPost";
 import LoginProtectedRoute from "./ProtectedRoutes/LoginProtectedRoute/LoginProtectedRoute";
+import EditAddProtectedRoute from "./ProtectedRoutes/EditAddProtectedRoute/EditAddProtectedRoute";
 
 function App() {
   const routes = createBrowserRouter([
@@ -23,8 +24,22 @@ function App() {
           ),
         },
         { path: "/", element: <Home /> },
-        { path: "/add-post", element: <AddPost /> },
-        { path: "/edit-post/:id", element: <EditPost /> },
+        {
+          path: "/add-post",
+          element: (
+            <EditAddProtectedRoute>
+              <AddPost />
+            </EditAddProtectedRoute>
+          ),
+        },
+        {
+          path: "/edit-post/:id",
+          element: (
+            <EditAddProtectedRoute>
+              <EditPost />
+            </EditAddProtectedRoute>
+          ),
+        },
       ],
     },
   ]);
