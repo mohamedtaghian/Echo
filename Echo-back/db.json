@@ -1,0 +1,28 @@
+{
+  "users": [
+    {
+      "email": "mohamedtaghian12@gmail.com",
+      "password": "$2a$10$oN4HD9.1evCyJj0Nnnuwy.ukWm0EJtMI3iy9C9TSoJ1bMlEgBYUMy",
+      "name": "Mohamed Ashraf",
+      "id": 1
+    }
+  ],
+  "posts": [
+    {
+      "id": 1,
+      "title": "Exploring the Swiss Alps",
+      "description": "A breathtaking journey through the mountains and valleys of Switzerland. We started our trek in Zermatt, witnessing the iconic Matterhorn at sunrise. The air is crisp, the water in the alpine lakes is crystal clear, and the hiking trails offer a sense of peace that is hard to find anywhere else in the world. Truly a bucket-list experience for any nature lover.",
+      "imageUrl": "https://images.unsplash.com/photo-1618648324286-5c087d9419b8?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTR8fHN3aXNzJTIwYWxwc3xlbnwwfHwwfHx8MA%3D%3D",
+      "userId": 1,
+      "authorName": "Mohamed Ashraf"
+    },
+    {
+      "id": 2,
+      "title": "The Future of React 19",
+      "description": "React 19 is bringing some of the most significant changes to the ecosystem since hooks were introduced. From the new React Compiler that handles memoization automatically to the 'use' hook for simplified data fetching and promise handling, the developer experience is evolving rapidly. In this post, we explore how these changes will reduce boilerplate code and improve performance.",
+      "imageUrl": "https://images.unsplash.com/photo-1633356122544-f134324a6cee",
+      "userId": 1,
+      "authorName": "Mohamed Ashraf"
+    }
+  ]
+}
