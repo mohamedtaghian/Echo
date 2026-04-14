@@ -54,7 +54,7 @@ function AddPost() {
           Create New Post
         </h2>
 
-        <div className="flex items-center gap-2 bg-white/5 mt-4 pl-6 rounded-full ring-2 ring-white/10 focus-within:ring-indigo-500/60 w-full h-12 overflow-hidden transition-all">
+        <div className="flex items-center gap-2 bg-white/5 mt-4 p-6 rounded-full ring-2 ring-white/10 focus-within:ring-indigo-500/60 w-full h-12 overflow-hidden transition-all">
           <span className="font-bold text-white/60 text-sm">T</span>
           <input
             {...register("title")}
@@ -68,7 +68,7 @@ function AddPost() {
           </p>
         )}
 
-        <div className="flex items-center gap-2 bg-white/5 mt-4 pl-6 rounded-full ring-2 ring-white/10 focus-within:ring-indigo-500/60 w-full h-12 overflow-hidden transition-all">
+        <div className="flex items-center gap-2 bg-white/5 mt-4 p-6 rounded-full ring-2 ring-white/10 focus-within:ring-indigo-500/60 w-full h-12 overflow-hidden transition-all">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="16"
@@ -97,7 +97,7 @@ function AddPost() {
           </p>
         )}
 
-        <div className="flex items-start gap-2 bg-white/5 mt-4 py-3 pl-6 rounded-2xl ring-2 ring-white/10 focus-within:ring-indigo-500/60 w-full min-h-32 overflow-hidden transition-all">
+        <div className="flex items-start gap-2 bg-white/5 mt-4 p-6 py-3 rounded-2xl ring-2 ring-white/10 focus-within:ring-indigo-500/60 w-full min-h-32 overflow-hidden transition-all">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="16"
