@@ -5,6 +5,7 @@ import AuthProvider from "./providers/AuthProvider/AuthProvider";
 import { Toaster } from "react-hot-toast";
 import Home from "./pages/Home/Home";
 import AddPost from "./pages/AddPost/AddPost";
+import EditPost from "./pages/EditPost/EditPost";
 
 function App() {
   const routes = createBrowserRouter([
@@ -15,6 +16,7 @@ function App() {
         { path: "/auth", element: <Authentication /> },
         { path: "/", element: <Home /> },
         { path: "/add-post", element: <AddPost /> },
+        { path: "/edit-post", element: <EditPost /> },
       ],
     },
   ]);
