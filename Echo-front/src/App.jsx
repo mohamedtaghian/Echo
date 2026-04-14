@@ -16,7 +16,7 @@ function App() {
         { path: "/auth", element: <Authentication /> },
         { path: "/", element: <Home /> },
         { path: "/add-post", element: <AddPost /> },
-        { path: "/edit-post", element: <EditPost /> },
+        { path: "/edit-post/:id", element: <EditPost /> },
       ],
     },
   ]);
