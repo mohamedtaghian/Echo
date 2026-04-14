@@ -24,6 +24,7 @@ function AuthProvider({ children }) {
     } catch (error) {
       console.log(error.response.data);
       toast.error(error.response.data);
+      throw new Error(error.response.data);
     } finally {
       setIsLoading(false);
       console.log("login", data);
@@ -42,6 +43,7 @@ function AuthProvider({ children }) {
     } catch (error) {
       console.log(error.response.data);
       toast.error(error.response.data);
+      throw new Error(error.response.data);
     } finally {
       setIsLoading(false);
       console.log("reg", data);
