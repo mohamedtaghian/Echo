@@ -20,6 +20,7 @@ function AddPost() {
     formState: { errors, isSubmitting },
   } = useForm({
     resolver: zodResolver(postSchema),
+    mode: "onBlur",
   });
 
   const onSubmit = async (data) => {
