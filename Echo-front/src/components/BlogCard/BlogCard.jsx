@@ -26,7 +26,7 @@ function BlogCard({ blog, handleDeleteBlog }) {
         user.id === blog.userId ? (
           <div className="right-5 bottom-5 absolute flex gap-2.5">
             <Link
-              to={"edit-post"}
+              to={`/edit-post/${blog.id}`}
               className="bg-slate-300 hover:bg-white p-2 rounded-full transition-colors duration-300 cursor-pointer"
             >
               <svg
