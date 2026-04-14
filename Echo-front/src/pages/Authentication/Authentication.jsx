@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { AuthContext } from "../../providers/AuthProvider/AuthProvider";
+import { useNavigate } from "react-router-dom";
 
 const loginSchema = z.object({
   email: z
@@ -17,6 +18,7 @@ const signupSchema = loginSchema.extend({
 });
 
 function Authentication() {
+  const navigate = useNavigate();
   const { handleLogin, handleRegister, isLoading } = useContext(AuthContext);
 
   // STATES
@@ -39,8 +41,17 @@ function Authentication() {
   };
 
   const onSubmit = async (data) => {
-    if (auth === "register") handleRegister(data);
-    if (auth === "login") handleLogin(data);
+    try {
+      if (auth === "register") {
+        await handleRegister(data);
+      } else if (auth === "login") {
+        await handleLogin(data);
+      }
+
+      navigate("/");
+    } catch (error) {
+      console.error("Auth failed:", error);
+    }
   };
 
   return (
