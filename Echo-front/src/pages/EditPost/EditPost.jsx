@@ -107,7 +107,7 @@ const EditPost = () => {
           </p>
         )}
 
-        <div className="flex items-start gap-2 bg-white/5 mt-4 p-6 py-3 rounded-2xl ring-2 ring-white/10 focus-within:ring-indigo-500/60 w-full min-h-32 overflow-hidden transition-all">
+        <div className="flex gap-2 bg-white/5 mt-4 p-6 py-3 rounded-2xl ring-2 ring-white/10 focus-within:ring-indigo-500/60 w-full min-h-32 overflow-hidden transition-all">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="16"
@@ -126,7 +126,7 @@ const EditPost = () => {
           <textarea
             {...register("description")}
             placeholder="Post Description"
-            className="bg-transparent border-none outline-none w-full h-full text-white resize-none placeholder-white/60"
+            className="border-none outline-none w-full overflow-hidden text-white resize-none placeholder-white/60"
           />
         </div>
         {errors.description && (
