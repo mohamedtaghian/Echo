@@ -6,6 +6,7 @@ import { Toaster } from "react-hot-toast";
 import Home from "./pages/Home/Home";
 import AddPost from "./pages/AddPost/AddPost";
 import EditPost from "./pages/EditPost/EditPost";
+import LoginProtectedRoute from "./ProtectedRoutes/LoginProtectedRoute/LoginProtectedRoute";
 
 function App() {
   const routes = createBrowserRouter([
@@ -13,7 +14,14 @@ function App() {
       path: "/",
       element: <Layout />,
       children: [
-        { path: "/auth", element: <Authentication /> },
+        {
+          path: "/auth",
+          element: (
+            <LoginProtectedRoute>
+              <Authentication />
+            </LoginProtectedRoute>
+          ),
+        },
         { path: "/", element: <Home /> },
         { path: "/add-post", element: <AddPost /> },
         { path: "/edit-post/:id", element: <EditPost /> },
