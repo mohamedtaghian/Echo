@@ -8,6 +8,7 @@ import AddPost from "./pages/AddPost/AddPost";
 import EditPost from "./pages/EditPost/EditPost";
 import LoginProtectedRoute from "./ProtectedRoutes/LoginProtectedRoute/LoginProtectedRoute";
 import EditAddProtectedRoute from "./ProtectedRoutes/EditAddProtectedRoute/EditAddProtectedRoute";
+import Error from "./pages/Error/Error";
 
 function App() {
   const routes = createBrowserRouter([
@@ -40,6 +41,7 @@ function App() {
             </EditAddProtectedRoute>
           ),
         },
+        { path: "*", element: <Error /> },
       ],
     },
   ]);
