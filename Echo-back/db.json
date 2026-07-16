@@ -5,6 +5,12 @@
       "password": "$2a$10$oN4HD9.1evCyJj0Nnnuwy.ukWm0EJtMI3iy9C9TSoJ1bMlEgBYUMy",
       "name": "Mohamed Ashraf",
       "id": 1
+    },
+    {
+      "email": "mada.qassem@gmail.com",
+      "password": "$2a$10$nlto2310qV1UkPQKtB8Yxefdz.NFLMxhSaYRefgKOUFD5pUQjYXyy",
+      "name": "Mohamed Ashraf",
+      "id": 2
     }
   ],
   "posts": [

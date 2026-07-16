@@ -2,9 +2,10 @@ import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useParams, useNavigate } from "react-router-dom";
-import axios from "axios";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-hot-toast";
 import { z } from "zod";
+import { getPost, updatePost } from "../../lib/api";
 
 const postSchema = z.object({
   title: z.string().min(5, "Title must be at least 5 characters"),
@@ -15,43 +16,57 @@ const postSchema = z.object({
 const EditPost = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
   const {
     register,
     handleSubmit,
     reset,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useForm({
     resolver: zodResolver(postSchema),
     mode: "onBlur",
   });
 
-  useEffect(() => {
-    const fetchPost = async () => {
-      try {
-        const res = await axios.get(`http://localhost:3000/posts/${id}`);
-        reset(res.data);
-      } catch (error) {
-        toast.error(error.response?.data || "Could not find that post.");
-        navigate("/");
-      }
-    };
-    fetchPost();
-  }, [id, reset, navigate]);
+  const {
+    data: post,
+    isLoading: isPostLoading,
+    isError,
+    error,
+  } = useQuery({
+    queryKey: ["posts", id],
+    queryFn: () => getPost(id),
+    enabled: Boolean(id),
+  });
 
-  const onSubmit = async (data) => {
-    try {
-      const token = localStorage.getItem("token");
-
-      await axios.patch(`http://localhost:3000/posts/${id}`, data, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-
+  const updatePostMutation = useMutation({
+    mutationFn: updatePost,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["posts"] });
+      queryClient.invalidateQueries({ queryKey: ["posts", id] });
       toast.success("Post updated successfully!");
       navigate("/");
-    } catch (error) {
+    },
+    onError: (error) => {
       toast.error(error.response?.data || "Failed to update post.");
+    },
+  });
+
+  useEffect(() => {
+    if (post) {
+      reset(post);
     }
+  }, [post, reset]);
+
+  useEffect(() => {
+    if (isError) {
+      toast.error(error.response?.data || "Could not find that post.");
+      navigate("/");
+    }
+  }, [error, isError, navigate]);
+
+  const onSubmit = async (data) => {
+    updatePostMutation.mutate({ id, data });
   };
 
   return (
@@ -137,10 +152,10 @@ const EditPost = () => {
 
         <button
           type="submit"
-          disabled={isSubmitting}
+          disabled={isPostLoading || updatePostMutation.isPending}
           className="bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 mt-8 mb-10 rounded-full w-full h-12 font-semibold text-white transition-colors duration-300 cursor-pointer"
         >
-          {isSubmitting ? "Saving Changes..." : "Update Post"}
+          {updatePostMutation.isPending ? "Saving Changes..." : "Update Post"}
         </button>
       </form>
     </section>

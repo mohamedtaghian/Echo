@@ -1,70 +1,52 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext } from "react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import BlogCard from "../../components/BlogCard/BlogCard";
 import NavBar from "../../components/NavBar/NavBar";
-import axios from "axios";
 import toast from "react-hot-toast";
-import { AuthContext } from "../../providers/AuthProvider/AuthProvider";
+import { AuthContext } from "../../providers/AuthProvider/AuthContext";
 import { Link } from "react-router-dom";
+import { deletePost, getPosts } from "../../lib/api";
 
 function Home() {
   const { user } = useContext(AuthContext);
+  const queryClient = useQueryClient();
 
-  // States
-  const [blogs, setBlogs] = useState(null);
-  const [error, setError] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const {
+    data: blogs = [],
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ["posts"],
+    queryFn: getPosts,
+  });
 
-  // Handlers
-  const getAllBlogs = async () => {
-    try {
-      const res = await axios.get("http://localhost:3000/posts");
-      setBlogs(res.data);
-    } catch (error) {
-      console.log(error);
-      setError(error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const getAuthHeaders = () => {
-    const token = localStorage.getItem("token");
-
-    return {
-      Authorization: `Bearer ${token}`,
-    };
-  };
-
-  const handleDeleteBlog = async (id) => {
-    try {
-      await axios.delete(`http://localhost:3000/posts/${id}`, {
-        headers: getAuthHeaders(),
-      });
-
-      setBlogs((prevBlogs) => prevBlogs.filter((blog) => blog.id !== id));
-      console.log(id);
+  const deletePostMutation = useMutation({
+    mutationFn: deletePost,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["posts"] });
       toast.success("Post deleted successfully");
-    } catch (error) {
+    },
+    onError: (error) => {
       if (error.response?.status === 401) {
         toast.error("You are not authorized to delete this post.");
       } else {
         toast.error("Failed to delete post");
       }
-    }
-  };
+    },
+  });
 
-  useEffect(() => {
-    getAllBlogs();
-  }, []);
+  const handleDeleteBlog = (id) => {
+    deletePostMutation.mutate(id);
+  };
 
   return (
     <div className="bg-black/90 pt-2.5 min-h-screen">
       <NavBar />
 
-      {!blogs ? (
+      {isError ? (
         <div className="flex justify-center items-center h-[calc(100vh-82px)]">
           <h2 className="font-bold text-red-400 text-2xl text-center">
-            No Posts to show!
+            Failed to load posts.
           </h2>
         </div>
       ) : (
@@ -123,7 +105,12 @@ function Home() {
                 </article>
               </>
             )}
-            {blogs?.map((blog) => (
+            {!isLoading && blogs.length === 0 && (
+              <h2 className="font-bold text-red-400 text-2xl text-center">
+                No Posts to show!
+              </h2>
+            )}
+            {blogs.map((blog) => (
               <BlogCard
                 key={blog.id}
                 blog={blog}

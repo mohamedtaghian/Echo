@@ -1,9 +1,10 @@
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import axios from "axios";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
+import { createPost } from "../../lib/api";
 
 const postSchema = z.object({
   title: z.string().min(5, "Title must be at least 5 characters"),
@@ -13,36 +14,39 @@ const postSchema = z.object({
 
 function AddPost() {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
+
+  const createPostMutation = useMutation({
+    mutationFn: createPost,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["posts"] });
+      toast.success("Post created successfully!");
+      navigate("/");
+    },
+    onError: (error) => {
+      toast.error(error.response?.data || "Failed to create post");
+    },
+  });
 
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useForm({
     resolver: zodResolver(postSchema),
     mode: "onBlur",
   });
 
   const onSubmit = async (data) => {
-    try {
-      const token = localStorage.getItem("token");
-      const user = JSON.parse(localStorage.getItem("user"));
+    const user = JSON.parse(localStorage.getItem("user"));
 
-      const payload = {
-        ...data,
-        userId: user.id,
-        authorName: user.name,
-      };
+    const payload = {
+      ...data,
+      userId: user.id,
+      authorName: user.name,
+    };
 
-      await axios.post("http://localhost:3000/posts", payload, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-
-      toast.success("Post created successfully!");
-      navigate("/");
-    } catch (error) {
-      toast.error(error.response?.data || "Failed to create post");
-    }
+    createPostMutation.mutate(payload);
   };
 
   return (
@@ -128,10 +132,10 @@ function AddPost() {
 
         <button
           type="submit"
-          disabled={isSubmitting}
+          disabled={createPostMutation.isPending}
           className="bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 mt-8 mb-10 rounded-full w-full h-12 font-semibold text-white transition-colors duration-300 cursor-pointer"
         >
-          {isSubmitting ? "Creating Post..." : "Publish Post"}
+          {createPostMutation.isPending ? "Creating Post..." : "Publish Post"}
         </button>
       </form>
 

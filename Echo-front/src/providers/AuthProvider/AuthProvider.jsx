@@ -1,8 +1,8 @@
-import { createContext, useState } from "react";
-import axios from "axios";
+import { useState } from "react";
+import { useMutation } from "@tanstack/react-query";
 import toast from "react-hot-toast";
-
-export const AuthContext = createContext(null);
+import { login, register } from "../../lib/api";
+import { AuthContext } from "./AuthContext";
 
 function AuthProvider({ children }) {
   const [user, setUser] = useState(() => {
@@ -10,43 +10,49 @@ function AuthProvider({ children }) {
     return savedUser ? JSON.parse(savedUser) : null;
   });
 
-  const [isLoading, setIsLoading] = useState(false);
+  const saveAuthSession = (data) => {
+    localStorage.setItem("token", data.accessToken);
+    localStorage.setItem("user", JSON.stringify(data.user));
+    setUser(data.user);
+  };
+
+  const loginMutation = useMutation({
+    mutationFn: login,
+    onSuccess: (data) => {
+      saveAuthSession(data);
+      toast.success(`Welcome ${data.user.name}`);
+    },
+    onError: (error) => {
+      const message = error.response?.data || "Login failed";
+      toast.error(message);
+    },
+  });
+
+  const registerMutation = useMutation({
+    mutationFn: register,
+    onSuccess: (data) => {
+      saveAuthSession(data);
+      toast.success("Registered successfully");
+    },
+    onError: (error) => {
+      const message = error.response?.data || "Registration failed";
+      toast.error(message);
+    },
+  });
 
   const handleLogin = async (data) => {
-    setIsLoading(true);
     try {
-      const res = await axios.post("http://localhost:3000/login", data);
-
-      localStorage.setItem("token", res.data.accessToken);
-      localStorage.setItem("user", JSON.stringify(res.data.user));
-      setUser(res.data.user);
-      toast.success(`Welcome ${res.data.user.name}`);
+      await loginMutation.mutateAsync(data);
     } catch (error) {
-      console.log(error.response.data);
-      toast.error(error.response.data);
-      throw new Error(error.response.data);
-    } finally {
-      setIsLoading(false);
-      console.log("login", data);
+      throw new Error(error.response?.data || "Login failed");
     }
   };
 
   const handleRegister = async (data) => {
-    setIsLoading(true);
     try {
-      const res = await axios.post("http://localhost:3000/register", data);
-
-      localStorage.setItem("token", res.data.accessToken);
-      localStorage.setItem("user", JSON.stringify(res.data.user));
-      setUser(res.data.user);
-      toast.success("Registered successfully");
+      await registerMutation.mutateAsync(data);
     } catch (error) {
-      console.log(error.response.data);
-      toast.error(error.response.data);
-      throw new Error(error.response.data);
-    } finally {
-      setIsLoading(false);
-      console.log("reg", data);
+      throw new Error(error.response?.data || "Registration failed");
     }
   };
 
@@ -61,7 +67,13 @@ function AuthProvider({ children }) {
 
   return (
     <AuthContext.Provider
-      value={{ user, handleLogin, handleRegister, handleLogout, isLoading }}
+      value={{
+        user,
+        handleLogin,
+        handleRegister,
+        handleLogout,
+        isLoading: loginMutation.isPending || registerMutation.isPending,
+      }}
     >
       {children}
     </AuthContext.Provider>
